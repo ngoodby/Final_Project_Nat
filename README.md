@@ -14,8 +14,6 @@ In this repo you can find:
 
 * The final [report](link)
 
-* The folder [data](link) with all the original files.
+* The [preprocessed data](https://github.com/ngoodby/Final_Project_James_Nat/blob/master/Data/Cleaned_Data.csv).
 
-* The [preprocessed data](link).
-
-* The Python [code](link) to pre process the data.
+* The Python [code](https://github.com/ngoodby/Final_Project_James_Nat/blob/master/Data/Data_Preprocessing.ipynb) to pre process the data.
