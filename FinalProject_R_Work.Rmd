@@ -1,7 +1,8 @@
 #Predictors of National Carbon Dioxide Emissions
 ##by Nat Goodby & James Valadez
 
-The question: Are urbanization rates and GDP predictors of a country's carbon dioxide emmissions?
+Are urbanization rates and GDP predictors of a country's carbon dioxide emmissions?
+
 The data comes from the [CIA World Factbook](https://www.cia.gov/library/publications/the-world-factbook/)
 Data was cleaned in Python. That process can be seen [here](https://github.com/ngoodby/Final_Project_James_Nat/blob/master/Data/Data_Preprocessing.ipynb)
 
