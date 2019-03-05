@@ -4,7 +4,7 @@
 ## Group: 
 
 * Nat Goodby
-* James
+* James Valadez
 
 <center>
 <img src="link to photo" width="800">
