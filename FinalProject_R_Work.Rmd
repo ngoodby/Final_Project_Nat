@@ -1,14 +1,13 @@
 #Looking at Predictors of National Carbon Dioxide Emissions
 ##by Nat Goodby & James Valadez
 
-The question: Question: Are urbanization rates and GDP predictors of a country's carbon dioxide emmissions?
+The question: Are urbanization rates and GDP predictors of a country's carbon dioxide emmissions?
 The data comes from the [CIA World Factbook](https://www.cia.gov/library/publications/the-world-factbook/)
 Data was cleaned in Python. That process can be seen [here](https://github.com/ngoodby/Final_Project_James_Nat/blob/master/Data/Data_Preprocessing.ipynb)
 
 Let's call the data:
 ```{r, eval=TRUE}
-dataLink="https://github.com/ngoodby/Final_Project_James_Nat/raw/master/Data/Cleaned_Data.csv"
-
+dataLink="https://raw.githubusercontent.com/ngoodby/Final_Project_James_Nat/master/Data/Cleaned_Data.csv"
 df=read.csv(dataLink,stringsAsFactors = FALSE)
 ```
 And look at the contents:
@@ -41,6 +40,13 @@ plot(df_noGib$Urbanization_Percentage,df_noGib$CO2_Emissions_PerCapita)
 plot(df_noGib$GDP_Per_Capita_Number,df_noGib$CO2_Emissions_PerCapita)
 ```
 Looks like there are higher CO2 emissions per capita as Urbanization rates and GDP per capita increase.
+```{r}
+cor(df_noGib$Urbanization_Percentage, df_noGib$CO2_Emissions_PerCapita)
+```
+```{r}
+cor(df_noGib$GDP_Per_Capita_Number, df_noGib$CO2_Emissions_PerCapita)
+```
+GDP_Per_Capita is showing higher correlation with CO2 Emissions.
 ```{r}
 test1=lm(as.numeric(Urbanization_Percentage)~CO2_Emissions_PerCapita,data=df_noGib)
 summary(test1)
