@@ -193,7 +193,7 @@ $(document).ready(function () {
 <h2>by Nat Goodby &amp; James Valadez</h2>
 <p>Are urbanization rates and GDP per capita predictors of a country’s carbon dioxide emmissions?</p>
 <p>This question intrigued us because urbanization and GDP per capita generally increase as a country’s level of development increases. Should we then expect CO2 emissions to rise as urbanization and GDP per capita rise? As GDP per capita rises, levels of consumption can be expected to rise simultaneously, which often leads to larger carbon footprints for a country’s citizens. At the same time, increased development can also lead to more technological development and access. Some countries have been able to take advantage of technologies to slow emissions by harnessing more renewable energies. Increased urbanization could theoretically also cause CO2 emissions to move in either direction. Increased urbanization may reduce transportation needs for people living in cities and work to reduce CO2 emissions overall. Increasing industrialization and growth of cities, however, could also be expected to increase CO2 emissions. Our study question is interesting because of this uncertainty with how these variables affect CO2 emissions. Both variables could be reasoned to affect CO2 emissions negatively or positively. So let’s have a look and see which it is for both of these variables:</p>
-<p>The data comes from the <a href="https://www.cia.gov/library/publications/the-world-factbook/">CIA World Factbook</a> Data was cleaned in Python. That process can be seen <a href="https://github.com/ngoodby/Final_Project_James_Nat/blob/master/Data/Data_Preprocessing.ipynb">here</a></p>
+<p>The data comes from the <a href="https://www.cia.gov/library/publications/the-world-factbook/">CIA World Factbook</a> Data was cleaned in Python. That process can be seen <a href="https://github.com/ngoodby/Final_Project_James_Nat/blob/master/Data/Data_Preprocessing.ipynb">here</a>.</p>
 <p>Let’s call the data:</p>
 <pre class="r"><code>dataLink=&quot;https://raw.githubusercontent.com/ngoodby/Final_Project_James_Nat/master/Data/Cleaned_Data.csv&quot;
 df=read.csv(dataLink,stringsAsFactors = FALSE)</code></pre>
@@ -274,7 +274,7 @@ summary(test1)</code></pre>
 ## Residual standard error: 20.52 on 209 degrees of freedom
 ## Multiple R-squared:  0.2492, Adjusted R-squared:  0.2456 
 ## F-statistic: 69.38 on 1 and 209 DF,  p-value: 1.066e-14</code></pre>
-<p>Those two variables show <em>significant correlation</em> however the adjusted R-squared value is only around 0.25, so the influence doesn’t seem to be very strong.</p>
+<p>Emissions and urbanization show <em>significant correlation</em> however the adjusted R-squared value is only around 0.25, so the influence doesn’t seem to be very strong.</p>
 <pre class="r"><code>test2=lm(as.numeric(GDP_Per_Capita_Number)~CO2_Emissions_PerCapita,data=df_noGib)
 summary(test2)</code></pre>
 <pre><code>## 
@@ -319,7 +319,10 @@ summary(test3)</code></pre>
 ## Residual standard error: 5.156 on 208 degrees of freedom
 ## Multiple R-squared:  0.5449, Adjusted R-squared:  0.5405 
 ## F-statistic: 124.5 on 2 and 208 DF,  p-value: &lt; 2.2e-16</code></pre>
-<p>So both GDP per capita and urbanization both predict CO2 emissions to some extent their loose correlation suggests that there are other factors at play as well.</p>
+</div>
+<div id="conclusions" class="section level2">
+<h2>Conclusions:</h2>
+<p>Both GDP per capita and urbanization both predict CO2 emissions to some extent but their loose correlation suggests that there are other factors at play as well.</p>
 </div>
 </div>
 
