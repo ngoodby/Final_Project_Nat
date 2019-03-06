@@ -7,7 +7,7 @@
 * James Valadez
 
 <center>
-<img src="link" width="800">
+<img src="https://github.com/ngoodby/Final_Project_James_Nat/blob/master/ProjectPhotop.jpg" width="800">
 </center>
 
 In this repo you can find:
