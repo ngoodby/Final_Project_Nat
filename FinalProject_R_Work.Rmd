@@ -1,10 +1,12 @@
 #Predictors of National Carbon Dioxide Emissions
 ##by Nat Goodby & James Valadez
 
-Are urbanization rates and GDP predictors of a country's carbon dioxide emmissions?
+Are urbanization rates and GDP per capita predictors of a country's carbon dioxide emmissions?
+
+This question intrigued us because urbanization and GDP per capita generally increase as a country's level of development increases. Should we then expect CO2 emissions to rise as urbanization and GDP per capita rise? As GDP per capita rises, levels of consumption can be expected to rise simultaneously, which often leads to larger carbon footprints for a country's citizens. At the same time, increased development can also lead to more technological development and access. Some countries have been able to take advantage of technologies to slow emissions by harnessing more renewable energies. Increased urbanization could theoretically also cause CO2 emissions to move in either direction. Increased urbanization may reduce transportation needs for people living in cities and work to reduce CO2 emissions overall. Increasing industrialization and growth of cities, however, could also be expected to increase CO2 emissions. Our study question is interesting because of this uncertainty with how these variables affect CO2 emissions. Both variables could be reasoned to affect CO2 emissions negatively or positively. So let's have a look and see which it is for both of these variables:    
 
 The data comes from the [CIA World Factbook](https://www.cia.gov/library/publications/the-world-factbook/)
-Data was cleaned in Python. That process can be seen [here](https://github.com/ngoodby/Final_Project_James_Nat/blob/master/Data/Data_Preprocessing.ipynb)
+Data was cleaned in Python. That process can be seen [here](https://github.com/ngoodby/Final_Project_James_Nat/blob/master/Data/Data_Preprocessing.ipynb).
 
 Let's call the data:
 ```{r, eval=TRUE}
@@ -26,7 +28,7 @@ Let's get a sense of how far outlying Gibraltar's CO2 Emissions are:
 ```{r}
 plot(df$Urbanization_Percentage,df$CO2_Emissions_PerCapita)
 ```
-Would be more helpful to see this plot without Gibraltar. Let's locate it, drop it, and save the resulting dataframe: 
+Something seems to be going on with the data for Gibraltar. It would be more helpful to see this plot without Gibraltar. Let's locate it, drop it, and save the resulting dataframe: 
 ```{r}
 df[76,]
 ```
@@ -47,20 +49,20 @@ cor(df_noGib$Urbanization_Percentage, df_noGib$CO2_Emissions_PerCapita)
 ```{r}
 cor(df_noGib$GDP_Per_Capita_Number, df_noGib$CO2_Emissions_PerCapita)
 ```
-GDP_Per_Capita is showing higher correlation with CO2 Emissions.
+GDP_Per_Capita is showing higher correlation with CO2 Emissions than Urbanization.
 ```{r}
 test1=lm(as.numeric(Urbanization_Percentage)~CO2_Emissions_PerCapita,data=df_noGib)
 summary(test1)
 ```
-Those two variables show *significance* however the adjusted R-squared value is only around 0.25.
+Those two variables show *significant correlation* however the adjusted R-squared value is only around 0.25, so the influence doesn't seem to be very strong.
 ```{r}
 test2=lm(as.numeric(GDP_Per_Capita_Number)~CO2_Emissions_PerCapita,data=df_noGib)
 summary(test2)
 ```
 GDP per capita shows a higher correlation (adjusted R-squared of 0.54) with CO2 emissions than Urbanization percentage did.
-Looking at how both independent varibles affect CO2 emissions collectively:
+Let's look at how both independent varibles affect CO2 emissions collectively:
 ```{r}
 test3=lm(CO2_Emissions_PerCapita ~ GDP_Per_Capita_Number + Urbanization_Percentage, data=df_noGib)
 summary(test3)
 ```
-
+So both GDP per capita and urbanization both predict CO2 emissions to some extent their loose correlation suggests that there are other factors at play as well. 
