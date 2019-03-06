@@ -1,4 +1,5 @@
-# Final Project: Are urbanization rates and GDP per capita predictors of a country's carbon dioxide emmissions?
+# Final Project: 
+## Are urbanization rates and GDP per capita predictors of a country's carbon dioxide emmissions?
 ## Course: Computational Thinking for Governance Analytics
 
 ## Group: 
