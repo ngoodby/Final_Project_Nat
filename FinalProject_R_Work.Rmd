@@ -24,10 +24,11 @@ What countries have the highest CO2 emissions?
 ```{r}
 head(df[order(df$CO2_Emissions_PerCapita, decreasing= T),], 10)
 ```
-Let's get a sense of how far outlying Gibraltar's CO2 Emissions are:
+Let's get a sense of the spread of CO2 emissions per capita:
 ```{r}
 plot(df$Urbanization_Percentage,df$CO2_Emissions_PerCapita)
 ```
+
 Something seems to be going on with the data for Gibraltar. It would be more helpful to see this plot without Gibraltar. Let's locate it, drop it, and save the resulting dataframe: 
 ```{r}
 df[76,]
@@ -42,6 +43,7 @@ plot(df_noGib$Urbanization_Percentage,df_noGib$CO2_Emissions_PerCapita)
 ```{r}
 plot(df_noGib$GDP_Per_Capita_Number,df_noGib$CO2_Emissions_PerCapita)
 ```
+
 Looks like there are higher CO2 emissions per capita as Urbanization rates and GDP per capita increase but let's look at the correlation strength:
 ```{r}
 cor(df_noGib$Urbanization_Percentage, df_noGib$CO2_Emissions_PerCapita)
@@ -70,6 +72,7 @@ Stil about the same, but now we can look at whether our dependent variables seem
 library(car)
 qqPlot(test3, main="QQ Plot")
 ```
+
 It looks like our variables fit a normal distribution overall. However, the fit is not as good at the more extreme values ("heavy tails"). This is somewhat disconcerning for our ability to make inferences based on the assumption of having a normal distribution.
 
 Let's do a heterscadisticity test to look at error variance across out data. If the output of the ncvTest function is non-significant, the error variance changes with the level of the response. Let's run the test:
@@ -82,6 +85,7 @@ Next, let's see if we can identify outliers that may be skewing our data:
 ```{r}
 influencePlot(test3, id.method = 'noteworthy', main="Influence Plot", sub="Circle size is proportial to Cook's Distance" )
 ```
+
 Rows 116, 156, and 192 seem to be disproportionate outliers. Let's try dropping those rows from being considered and see if it makes a difference:
 ```{r}
 CountrysOUT=c(116,156,192)
