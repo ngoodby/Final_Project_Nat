@@ -65,5 +65,29 @@ Let's look at how both independent varibles affect CO2 emissions collectively:
 test3=lm(CO2_Emissions_PerCapita ~ GDP_Per_Capita_Number + Urbanization_Percentage, data=df_noGib)
 summary(test3)
 ```
+Stil about the same, but now we can look at whether our dependent variables seem normally distributed by looking a their fit on a QQ plot:
+```{r}
+library(car)
+qqPlot(test3, main="QQ Plot")
+```
+It looks like our variables fit a normal distribution overall. However, the fit is not as good at the more extreme values ("heavy tails"). This is somewhat disconcerning for our ability to make inferences based on the assumption of having a normal distribution.
+
+Let's do a heterscadisticity test to look at error variance across out data. If the output of the ncvTest function is non-significant, the error variance changes with the level of the response. Let's run the test:
+```{r}
+ncvTest(test3)
+```
+So, indeed, the error variance does change with the level of response.
+
+Next, let's see if we can identify outliers that may be skewing our data:
+```{r}
+influencePlot(test3, id.method = 'noteworthy', main="Influence Plot", sub="Circle size is proportial to Cook's Distance" )
+```
+Rows 116, 156, and 192 seem to be disproportionate outliers. Let's try dropping those rows from being considered and see if it makes a difference:
+```{r}
+CountrysOUT=c(116,156,192)
+summary(lm(CO2_Emissions_PerCapita ~ GDP_Per_Capita_Number + Urbanization_Percentage, data=df_noGib))
+```
+Our adjusted R-squared value is still about the same at 0.5405. 
+
 ##Conclusions:
 Both GDP per capita and urbanization both predict CO2 emissions to some extent but their loose correlation suggests that there are other factors at play as well.  
