@@ -8,6 +8,8 @@ This question intrigued us because urbanization and GDP per capita generally inc
 The data comes from the [CIA World Factbook](https://www.cia.gov/library/publications/the-world-factbook/)
 Data was cleaned in Python. That process can be seen [here](https://github.com/ngoodby/Final_Project_James_Nat/blob/master/Data/Data_Preprocessing.ipynb).
 
+## Exploring the data
+
 Let's call the data:
 ```{r, eval=TRUE}
 dataLink="https://raw.githubusercontent.com/ngoodby/Final_Project_James_Nat/master/Data/Cleaned_Data.csv"
@@ -44,6 +46,8 @@ plot(df_noGib$Urbanization_Percentage,df_noGib$CO2_Emissions_PerCapita)
 plot(df_noGib$GDP_Per_Capita_Number,df_noGib$CO2_Emissions_PerCapita)
 ```
 
+##Looking at correlation strength between variables
+
 Looks like there are higher CO2 emissions per capita as Urbanization rates and GDP per capita increase but let's look at the correlation strength:
 ```{r}
 cor(df_noGib$Urbanization_Percentage, df_noGib$CO2_Emissions_PerCapita)
@@ -52,11 +56,15 @@ cor(df_noGib$Urbanization_Percentage, df_noGib$CO2_Emissions_PerCapita)
 cor(df_noGib$GDP_Per_Capita_Number, df_noGib$CO2_Emissions_PerCapita)
 ```
 GDP_Per_Capita is showing higher correlation with CO2 Emissions than Urbanization.
+
+##Creating a linear regression model
+
 ```{r}
 test1=lm(as.numeric(Urbanization_Percentage)~CO2_Emissions_PerCapita,data=df_noGib)
 summary(test1)
 ```
 Emissions and urbanization show *significant correlation* however the adjusted R-squared value is only around 0.25, so the influence doesn't seem to be very strong.
+
 ```{r}
 test2=lm(as.numeric(GDP_Per_Capita_Number)~CO2_Emissions_PerCapita,data=df_noGib)
 summary(test2)
@@ -67,23 +75,26 @@ Let's look at how both independent varibles affect CO2 emissions collectively:
 test3=lm(CO2_Emissions_PerCapita ~ GDP_Per_Capita_Number + Urbanization_Percentage, data=df_noGib)
 summary(test3)
 ```
+
+##Testing the regression
+
 Stil about the same, but now we can look at whether our dependent variables seem normally distributed by looking a their fit on a QQ plot:
 ```{r}
 library(car)
 qqPlot(test3, main="QQ Plot")
 ```
 
-It looks like our variables fit a normal distribution overall. However, the fit is not as good at the more extreme values ("heavy tails"). This is somewhat disconcerning for our ability to make inferences based on the assumption of having a normal distribution.
+It looks like our variables fit a normal distribution more so in the middle quantiles. However, the fit is not as good at the more extreme values ("heavy tails"). This suggests that our data may have more extreme values than would be expected if all our data fell along a normal distribution. This is somewhat disconcerning for our ability to make inferences based on the assumption of having a normal distribution. But let's see if we can investigate the amount of influence the extreme values are having on our data and maybe adjust for them.   
 
-Let's do a heterscadisticity test to look at error variance across out data. If the output of the ncvTest function is non-significant, the error variance changes with the level of the response. Let's run the test:
+Let's do a heteroscedasticity test to look at error variance across out data. If the output of the ncvTest function is non-significant, the error variance changes with the level of the response. Let's run the test:
 ```{r}
 ncvTest(test3)
 ```
-So, indeed, the error variance does change with the level of response.
+The p-value is less than a significance level of 0.05, so we can reject the null hypothesis that the variance of residuals is constant. Therefore, it seems that heteroscedasticity is present. The error variance does change with the level of response.
 
 Next, let's see if we can identify outliers that may be skewing our data:
 ```{r}
-influencePlot(test3, id.method = 'noteworthy', main="Influence Plot", sub="Circle size is proportial to Cook's Distance" )
+influencePlot(test3, id.method='noteworthy', main="Influence Plot", sub="Circle size is proportial to Cook's Distance" )
 ```
 
 Rows 116, 156, and 192 seem to be disproportionate outliers. Let's try dropping those rows from being considered and see if it makes a difference:
@@ -91,7 +102,12 @@ Rows 116, 156, and 192 seem to be disproportionate outliers. Let's try dropping 
 CountrysOUT=c(116,156,192)
 summary(lm(CO2_Emissions_PerCapita ~ GDP_Per_Capita_Number + Urbanization_Percentage, data=df_noGib))
 ```
-Our adjusted R-squared value is still about the same at 0.5405. 
+Our adjusted R-squared value is still about the same even without those outlying values, at 0.5405. 
+
+##Next Steps:
+
+It appears that a different type of regression model may be needed to fit our data. Unfortunately, that is beyond the scope of this project. Next steps would be trying to find models to accommodate the heteroscedasticity in our data and better explain the extreme values at the tails of our QQ plot. 
 
 ##Conclusions:
-Both GDP per capita and urbanization both predict CO2 emissions to some extent but their loose correlation suggests that there are other factors at play as well.  
+
+While there is room to improve the regression model to fit this data, both GDP per capita and urbanization were both shown to predict CO2 emissions to some extent. However, their loose correlation suggests that there are other factors at play as well.  
