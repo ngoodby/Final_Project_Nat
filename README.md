@@ -13,7 +13,7 @@
 
 In this repo you can find:
 
-* The final [report](http://htmlpreview.github.io/)
+* The final [report](http://htmlpreview.github.io/?https://github.com/ngoodby/Final_Project_James_Nat/blob/master/FinalProject_R_Work.html)
 
 * The [pre-processed data](https://github.com/ngoodby/Final_Project_James_Nat/blob/master/Data/Cleaned_Data.csv).
 
