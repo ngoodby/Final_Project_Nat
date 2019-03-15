@@ -1,4 +1,4 @@
-# Computational Thinking for Government Analytics Final Project: 
+# Final Project: 
 ## Are urbanization rates and GDP per capita predictors of a country's carbon dioxide emmissions?
 ## Course: Computational Thinking for Governance Analytics
 
