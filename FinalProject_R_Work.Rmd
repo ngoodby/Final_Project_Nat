@@ -31,6 +31,8 @@ What countries have the highest CO2 emissions?
 ```{r}
 head(df[order(df$CO2_Emissions_PerCapita, decreasing= T),], 10)
 ```
+*Note that CO2 emissions are reported in tons of carbon dioxide and GDP per capita is reported in US dollars.* 
+
 Let's get a sense of the urbanization levels as they relate to CO2 emissions per capita:
 ```{r}
 plot(df$Urbanization_Percentage,df$CO2_Emissions_PerCapita)
