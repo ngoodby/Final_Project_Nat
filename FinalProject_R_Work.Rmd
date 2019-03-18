@@ -1,12 +1,17 @@
 #Predictors of National Carbon Dioxide Emissions
-##by Nat Goodby & James Valadez
 
+by Nat Goodby & James Valadez
+
+*Central Question:*
 Are urbanization rates and GDP per capita predictors of a country's carbon dioxide emmissions?
 
 This question intrigued us because urbanization and GDP per capita generally increase as a country's level of development increases. Should we then expect CO2 emissions to rise as urbanization and GDP per capita rise? As GDP per capita rises, levels of consumption can be expected to rise simultaneously, which often leads to larger carbon footprints for a country's citizens. At the same time, increased development can also lead to more technological development and access. Some countries have been able to take advantage of technologies to slow emissions by harnessing more renewable energies. Increased urbanization could theoretically also cause CO2 emissions to move in either direction. Increased urbanization may reduce transportation needs for people living in cities and work to reduce CO2 emissions overall. Increasing industrialization and growth of cities, however, could also be expected to increase CO2 emissions. Our study question is interesting because of this uncertainty with how these variables affect CO2 emissions. Both variables could be reasoned to affect CO2 emissions negatively or positively. So let's have a look and see which it is for both of these variables:
 
 The data comes from the [CIA World Factbook](https://www.cia.gov/library/publications/the-world-factbook/)
-Data was cleaned in Python. That process can be seen [here](https://github.com/ngoodby/Final_Project_James_Nat/blob/master/Data/Data_Preprocessing.ipynb).
+
+Data was cleaned in Python. That process can be seen [here](https://github.com/ngoodby/Final_Project_James_Nat/blob/master/Data/Data_Preprocessing.ipynb)
+
+The prepared dataset can be found [here](https://github.com/ngoodby/Final_Project_James_Nat/blob/master/Data/Cleaned_Data.csv)
 
 ## Exploring the data
 
@@ -26,59 +31,70 @@ What countries have the highest CO2 emissions?
 ```{r}
 head(df[order(df$CO2_Emissions_PerCapita, decreasing= T),], 10)
 ```
-Let's get a sense of the spread of CO2 emissions per capita:
+Let's get a sense of the urbanization levels as they relate to CO2 emissions per capita:
 ```{r}
 plot(df$Urbanization_Percentage,df$CO2_Emissions_PerCapita)
 ```
 
-Something seems to be going on with the data for Gibraltar. It would be more helpful to see this plot without Gibraltar. Let's locate it, drop it, and save the resulting dataframe: 
+Something seems to be going on with the data for Gibraltar. Gibraltar, is not technically its own country, so something seems to be going on with how the CIA is reporting some of this data. It would be more helpful to see this plot without Gibraltar. Let's locate it, drop it, and save the resulting dataframe: 
 ```{r}
 df[76,]
 ```
 ```{r}
 df_noGib=df[-76, ]
 ```
-Now what does that look like if we plot again:
+Now, what does that look like if we plot again:
 ```{r}
 plot(df_noGib$Urbanization_Percentage,df_noGib$CO2_Emissions_PerCapita)
 ```
+
+We will plot GDP per capita as a function of CO2 emissions as well:
 ```{r}
 plot(df_noGib$GDP_Per_Capita_Number,df_noGib$CO2_Emissions_PerCapita)
 ```
 
+Visually, CO2 emissions per capita seem to be increasing as urbanization rates and GDP per capita increase. 
+
 ##Looking at correlation strength between variables
 
-Looks like there are higher CO2 emissions per capita as Urbanization rates and GDP per capita increase but let's look at the correlation strength:
+It looks like there are higher CO2 emissions per capita as Urbanization rates and GDP per capita increase but let's look at the correlation strengths. First for urbanization percentage and CO2 emissions per capita:
 ```{r}
 cor(df_noGib$Urbanization_Percentage, df_noGib$CO2_Emissions_PerCapita)
 ```
+And then for GDP per capita and CO2 emissions per capita:
 ```{r}
 cor(df_noGib$GDP_Per_Capita_Number, df_noGib$CO2_Emissions_PerCapita)
 ```
-GDP_Per_Capita is showing higher correlation with CO2 Emissions than Urbanization.
+GDP_Per_Capita shows higher correlation with CO2 emissions than urbanization. This suggests that GDP per capita is more closely linked with CO2 emissions and vice versa than urbanization rates are with CO2 emissions.
 
 ##Creating a linear regression model
 
+Knowing that we do have some correlation between our independent variables (urbanization rate & GDP per capita) and our dependent variable (CO2 emissions), we can try looking at a linear regression including all three variables to see how they interact. 
+
+First, let's look at a linear regression of urbanization percentage and CO2 emissions and see how they interact:
 ```{r}
 test1=lm(as.numeric(Urbanization_Percentage)~CO2_Emissions_PerCapita,data=df_noGib)
 summary(test1)
 ```
 Emissions and urbanization show *significant correlation* however the adjusted R-squared value is only around 0.25, so the influence doesn't seem to be very strong.
 
+Now, we can look at a linear regression of GDP and CO2 emissions and see how they interact:
 ```{r}
 test2=lm(as.numeric(GDP_Per_Capita_Number)~CO2_Emissions_PerCapita,data=df_noGib)
 summary(test2)
 ```
-GDP per capita shows a higher correlation (adjusted R-squared of 0.54) with CO2 emissions than Urbanization percentage did.
-Let's look at how both independent varibles affect CO2 emissions collectively:
+GDP per capita shows *higher correlation* (adjusted R-squared of 0.54) with CO2 emissions than urbanization percentage did.
+
+Lastly, let's look at how both independent varibles affect CO2 emissions collectively with another linear regression:
 ```{r}
 test3=lm(CO2_Emissions_PerCapita ~ GDP_Per_Capita_Number + Urbanization_Percentage, data=df_noGib)
 summary(test3)
 ```
+Again, while there is some correlation, the regression does not seem to be a perfect fit. Therefore, we will want to investigate the regression further to understand some potential reasons for this. 
 
 ##Testing the regression
 
-Stil about the same, but now we can look at whether our dependent variables seem normally distributed by looking a their fit on a QQ plot:
+To test whether a linear regression is an appropriate tool to be using, we can look at whether our dependent variables seem normally distributed by looking a their fit on a QQ plot. We will call the "car" package and create the QQ plot:
 ```{r}
 library(car)
 qqPlot(test3, main="QQ Plot")
@@ -90,24 +106,20 @@ Let's do a heteroscedasticity test to look at error variance across out data. If
 ```{r}
 ncvTest(test3)
 ```
-The p-value is less than a significance level of 0.05, so we can reject the null hypothesis that the variance of residuals is constant. Therefore, it seems that heteroscedasticity is present. The error variance does change with the level of response.
+The p-value is less than a significance level of 0.05, so we can reject the null hypothesis that the variance of residuals is constant. Therefore, it seems that heteroscedasticity is present. *The error variance does change with the level of response.*
 
 Next, let's see if we can identify outliers that may be skewing our data:
 ```{r}
 influencePlot(test3, id.method='noteworthy', main="Influence Plot", sub="Circle size is proportial to Cook's Distance" )
 ```
 
-Rows 116, 156, and 192 seem to be disproportionate outliers. Let's try dropping those rows from being considered and see if it makes a difference:
+Rows 116, 156, and 192 seem to be disproportionate outliers. Let's try dropping those rows from being considered and see if it makes a difference when we run the linear regression again:
 ```{r}
 CountrysOUT=c(116,156,192)
 summary(lm(CO2_Emissions_PerCapita ~ GDP_Per_Capita_Number + Urbanization_Percentage, data=df_noGib))
 ```
-Our adjusted R-squared value is still about the same even without those outlying values, at 0.5405. 
+Our adjusted R-squared value is still about the same even without those outlying values, at 0.5405. So dropping those values did not help improve our correlation. It appears that a different type of regression model may be needed to fit our data. Unfortunately, that is beyond the scope of this project. Next steps would be trying to find models to accommodate the heteroscedasticity in our data and better explain the extreme values at the tails of our QQ plot.  
 
-##Next Steps:
+##Conclusions and next steps
 
-It appears that a different type of regression model may be needed to fit our data. Unfortunately, that is beyond the scope of this project. Next steps would be trying to find models to accommodate the heteroscedasticity in our data and better explain the extreme values at the tails of our QQ plot. 
-
-##Conclusions:
-
-While there is room to improve the regression model to fit this data, both GDP per capita and urbanization were both shown to predict CO2 emissions to some extent. However, their loose correlation suggests that there are other factors at play as well.  
+While there is room to improve the regression model to fit this data, both GDP per capita and urbanization were both shown to predict CO2 emissions to some extent. This means that as GDP and urbanization rates rise, we would expect CO2 emissions to rise as well. However, their loose correlation suggests that there are exceptions to that expectation and other factors at play as well. It would be interesting to identify which countries are exceptions from those trends and try to understand why. We may want to emulate countries that show decreasing CO2 emissions as GDP and urbanization rates rise. Perhaps they have different policies and infrastructures in place or approaches to development and consumption that could be informative of ways to discrourage the continued rise of CO2 emissions as our world continues to urbanize, globalize, and develop. Ultimately, our global CO2 emissions are tied to the infrastructure choices countries make as they develop. It is worth understanding which countries emit the least CO2, while enjoying the benefits of urbanization and increased GDP per capita, to point to them as role-models for successful development. Rising CO2 emissions are an existential threat to our world as the consequences of climate change begin to manifest with increased natural disasters, sea level rise, and the creation of health threatening pollution. Further investigation into the topics of this report will help inform ways countries can minimize emissions without sacrificing their own prosperity. 
